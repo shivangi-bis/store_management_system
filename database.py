@@ -29,6 +29,18 @@ def init_db():
             FOREIGN KEY(product_id) REFERENCES products(id)
         )
     ''')
+
+    # Create users table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+    ''')
+
+    # COMMIT EVERYTHING BEFORE CLOSING
     conn.commit()
     conn.close()
 

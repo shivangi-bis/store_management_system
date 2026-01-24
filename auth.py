@@ -1,15 +1,15 @@
-# auth.py
 from functools import wraps
 from flask import request, jsonify
-
-# Simple token (in real projects, you would generate/manage tokens securely)
-API_TOKEN = "shivangibis123"
+from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.headers.get('x-api-key')
-        if not token or token != API_TOKEN:
-            return jsonify({"error": "Unauthorized access"}), 401
+        try:
+            verify_jwt_in_request()
+            user = get_jwt_identity()
+        except:
+            return jsonify({"error": "Unauthorized or invalid token"}), 401
+        
         return f(*args, **kwargs)
     return decorated
